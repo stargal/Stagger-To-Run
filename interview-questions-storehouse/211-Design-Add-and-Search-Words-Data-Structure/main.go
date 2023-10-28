@@ -1,0 +1,6 @@
+package main
+
+// 211. 添加与搜索单词 - 数据结构设计
+// https://leetcode.cn/problems/design-add-and-search-words-data-structure/
+
+// medium
