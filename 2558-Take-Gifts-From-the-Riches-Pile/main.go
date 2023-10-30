@@ -21,7 +21,9 @@ func pickGifts(gifts []int, k int) int64 {
 	// take the square root of max heap every time in k times
 	for i := 0; i < k; i++ {
 		gifts[0] = int(math.Sqrt(float64(gifts[0])))
-		heapify(gifts, 0)
+		heapify(gifts, 0, func(a, b int) bool {
+			return a < b
+		})
 	}
 	// sum the rest of the heap
 	var sum int64
@@ -36,26 +38,29 @@ func maximumHeap(arr []int) {
 	// Start from bottom-most and rightmost
 	// internal mode and heapify all internal
 	// modes in bottom up way
+	myLessFunc := func(a, b int) bool {
+		return a < b
+	}
 	for i := len(arr)/2 - 1; i >= 0; i-- {
-		heapify(arr, i)
+		heapify(arr, i, myLessFunc)
 	}
 }
 
 // To heapify a subtree rooted with node i which is
 // an index in arr[].Nn is size of heap
-func heapify(arr []int, i int) {
+func heapify[T any](arr []T, i int, lessFunc func(a, b T) bool) {
 	n := len(arr)
 	largest := i // Initialize largest as root
 	l := 2*i + 1 // left = 2*i + 1
 	r := 2*i + 2 // right = 2*i + 2
 
 	// If left child is larger than root
-	if l < n && arr[l] > arr[largest] {
+	if l < n && lessFunc(arr[largest], arr[l]) {
 		largest = l
 	}
 
 	// If right child is larger than largest so far
-	if r < n && arr[r] > arr[largest] {
+	if r < n && lessFunc(arr[largest], arr[r]) {
 		largest = r
 	}
 
@@ -64,6 +69,6 @@ func heapify(arr []int, i int) {
 		arr[i], arr[largest] = arr[largest], arr[i]
 
 		// Recursively heapify the affected sub-tree
-		heapify(arr, largest)
+		heapify(arr, largest, lessFunc)
 	}
 }
